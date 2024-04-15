@@ -1,3 +1,5 @@
+let history = [];
+
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('search-form');
     const cityInput = document.getElementById('city-input')
@@ -9,6 +11,11 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         const cityName = cityInput.value.trim();
         if (cityName === '') return;
+
+        if (!history.includes(cityName)) {
+            history.push(cityName);
+            displaySearchHistory();
+        }
 
         fetchWeather(cityName);
     });
@@ -74,7 +81,16 @@ document.addEventListener('DOMContentLoaded', function () {
         forecastSection.innerHTML = html
     }
 
-    function displaySearchHistory(history) {
-
+    function displaySearchHistory() {
+        searchHistory.innerHTML = '';
+        history.forEach(city => {
+            const cityDiv = document.createElement('div');
+            cityDiv.textContent = city;
+            cityDiv.classList.add('search-history-item');
+            cityDiv.onclick = () => fetchWeather(city);
+            searchHistory.appendChild(cityDiv);
+        })
     }
+
+    displaySearchHistory();
 });
